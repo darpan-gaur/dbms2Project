@@ -1,5 +1,5 @@
 from django.db import models
-# from User.models import User
+from users.models import CustomUser as User
 
 # Create your models here.
 
@@ -30,7 +30,7 @@ class Roles(models.Model):
     
 
 class JobListing(models.Model):
-    #user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     #company
     # title = models.CharField(max_length=100)
     role = models.ForeignKey(Roles, on_delete=models.CASCADE)
@@ -57,7 +57,6 @@ class JobApplication(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     job = models.ForeignKey(JobListing, on_delete=models.CASCADE)
     # resume = models.FileField(upload_to='resumes/')
-    # cover_letter = models.TextField()
     applied_on = models.DateTimeField(auto_now_add=True)
 
     status = models.ForeignKey(JobStatus, on_delete=models.CASCADE)

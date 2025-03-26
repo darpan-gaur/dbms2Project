@@ -3,12 +3,17 @@ from django.contrib.auth import login, authenticate, logout
 from .models import CustomUser as Users
 from .signupForm import NewUserForm
 from django.contrib import messages
+from applicant.models import Applicant
 
 # Create your views here.
 def signup_applicant_veiw(request):
     if request.user.is_authenticated:
         messages.warning(request, 'You are already Logged In')
-        return redirect('home')         ## TODO: Change this to the applicant's dashboard
+        applicant = Applicant.objects.filter(user=request.user)
+        if applicant.exists():
+            return redirect('applicant_profile')
+        return redirect('update_applicant')
+        
     if request.method == 'POST':
         form = NewUserForm(request.POST)
         if form.is_valid():
@@ -23,7 +28,7 @@ def signup_applicant_veiw(request):
             user.is_company = False
             user.save()
             login(request, user)
-            return redirect('home')
+            return redirect('update_applicant')
         else:
             print(form.errors)
             messages.error(request, "Invalid form")
@@ -57,14 +62,15 @@ def signup_company_veiw(request):
 def login_view(request):
     if request.user.is_authenticated:
         messages.warning(request, 'You are already Logged In')
-        return redirect('home')         ## TODO: Change this to the dashboard
+        if request.user.is_applicant:
+            return redirect('applicant_profile')
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
-            return redirect('home')
+            return redirect('applicant_profile')
         else:
             messages.error(request, 'Invalid email or password')
             return redirect('login')

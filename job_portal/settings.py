@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'recruiter',
     'users',
+    'jobListings',
+    'applicant',
+    
 
     "widget_tweaks",
 ]

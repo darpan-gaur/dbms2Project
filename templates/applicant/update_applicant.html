@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+{% csrf_token %}
+
+<form class="p-4 p-md-5 border rounded-3 bg-light" method="POST">
+    {% csrf_token %}
+    <div class="form-floating mb-3">
+        {% render_field form.location class="form-control" %}
+        <label for="floatingInput">location</label>
+    </div>
+    <div class="form-floating mb-3">
+        {% render_field form.phone_number class="form-control" %}
+        <label for="floatingInput">phone_number</label>
+    </div>
+    <!-- make a multiselect checkbox for skill-->
+    <div class="form-floating mb-3">
+        <label for="floatingInput">Skills</label>
+        <select name="skills" id="skills" class="form-select" multiple>
+            {% for skill in skills %}
+            <option value="{{ skill.id }}">{{ skill.name }}</option>
+            {% endfor %}
+        </select>
+
+    
+
+    <button class="w-100 btn btn-lg btn-primary" type="submit">Sign Up</button>
+    <hr class="my-4">
+    <small class="text-muted">Already have an account? <a href="{% url 'login' %}">Sign In</a></small>
+</form>
+
+
+{% endblock content %}
