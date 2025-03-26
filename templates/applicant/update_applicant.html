@@ -4,31 +4,39 @@
 {% block content %}
 {% csrf_token %}
 
-<form class="p-4 p-md-5 border rounded-3 bg-light" method="POST">
+<form class="p-4 p-md-5 border rounded-3 bg-light" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
+    
     <div class="form-floating mb-3">
         {% render_field form.location class="form-control" %}
-        <label for="floatingInput">location</label>
+        <label for="floatingInput">Location</label>
     </div>
+    
     <div class="form-floating mb-3">
         {% render_field form.phone_number class="form-control" %}
-        <label for="floatingInput">phone_number</label>
+        <label for="floatingInput">Phone Number</label>
     </div>
-    <!-- make a multiselect checkbox for skill-->
-    <div class="form-floating mb-3">
-        <label for="floatingInput">Skills</label>
+
+    <div class="mb-3">
+        <label for="skills">Skills</label>
         <select name="skills" id="skills" class="form-select" multiple>
-            {% for skill in skills %}
-            <option value="{{ skill.id }}">{{ skill.name }}</option>
+            {% for skill in form.skills.field.queryset %}
+                <option value="{{ skill.id }}" {% if skill in form.instance.skills.all %}selected{% endif %}>
+                    {{ skill.name }}
+                </option>
             {% endfor %}
         </select>
+    </div>
 
-    
+    <div class="mb-3">
+        <label for="resume">Resume</label>
+        <input type="file" name="resume" id="resume" class="form-control">
+    </div>
 
-    <button class="w-100 btn btn-lg btn-primary" type="submit">Sign Up</button>
-    <hr class="my-4">
-    <small class="text-muted">Already have an account? <a href="{% url 'login' %}">Sign In</a></small>
+    <button class="w-100 btn btn-lg btn-primary" type="submit">Update</button>
 </form>
+
+
 
 
 {% endblock content %}

@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Skills, Applicant
 from django.contrib import messages
-from .forms import ApplicantProfileForm
+from .forms import ApplicantProfileForm, ResumeForm
+from users.models import CustomUser
 
 # Create your views here.
 
@@ -11,7 +12,8 @@ def applicant_profile_view(request):
         user_id = request.user.id
         applicant = Applicant.objects.get(user=user_id)
         skills = applicant.skills.all()
-        return render(request, 'applicant/applicant_profile.html', {'applicant': applicant, 'skills': skills})
+        print("Here", applicant.resume.resume.url)
+        return render(request, 'applicant/applicant_profile.html', {'applicant': applicant, 'skills': skills, 'resume': applicant.resume})
 
     if not request.user.is_authenticated:
         messages.warning(request, 'Please Login/Signup first')
@@ -23,36 +25,89 @@ def update_applicant_view(request):
     if request.user.is_authenticated:
         user_id = request.user.id
         applicant = Applicant.objects.filter(user=user_id)
+
         if request.method == 'POST':
             form = ApplicantProfileForm(request.POST)
             if form.is_valid():
-                if applicant is None or len(applicant) == 0:
-                    applicant = form.save(commit=False)
-                    applicant.user = request.user
-                    applicant.save()
-                    return render(request, 'applicant/applicant_profile.html', {'applicant': applicant})
+                if not applicant.exists():  # Check if applicant exists
+                    applicant_instance = form.save(commit=False)
+                    applicant_instance.user = request.user
+                    applicant_instance.save()
+                    form.save_m2m()  # Save many-to-many field (skills)
+                    resume_ins = upload_resume(request)
+                    applicant_instance.resume = resume_ins
+                    applicant_instance.save()
+
                 else:
-                    applicant.location = form.cleaned_data['location']
-                    applicant.phone_number = form.cleaned_data['phone_number']
                     applicant_instance = applicant.first()
-                    applicant_skills = applicant_instance.skills.all() if applicant_instance else []
-                    for skill in applicant_skills:
-                        applicant.skills.remove(skill)
-                    skills = form.cleaned_data['skills']
-                    for skill in skills:
-                        applicant.skills.add(skill)
-                    applicant.update()
-                    return render(request, 'applicant/applicant_profile.html', {'applicant': applicant})
+                    applicant_instance.location = form.cleaned_data['location']
+                    applicant_instance.phone_number = form.cleaned_data['phone_number']
+
+                    # Clear old skills
+                    applicant_instance.skills.clear()
+
+                    # Add new skills
+                    # skills = form.cleaned_data['skills']
+                    # for skill in skills:
+                    #     applicant_instance.skills.add(skill)
+                    applicant_instance.skills.set(form.cleaned_data['skills'])
+                    resume_ins = upload_resume(request)
+                    applicant_instance.resume = resume_ins
+                    applicant_instance.save()  # Save the updated object
+                    print("THis isss: ", applicant_instance.resume.resume.url)
+
+                return redirect('applicant_profile')
+
             else:
                 print(form.errors)
                 messages.warning(request, 'Please enter valid data')
-
                 return render(request, 'applicant/update_applicant.html', {'form': form, 'skills': Skills.objects.all()})
+
         form = ApplicantProfileForm()
         return render(request, 'applicant/update_applicant.html', {'form': form, 'skills': Skills.objects.all()})
+
     else:
         messages.warning(request, 'Please Login/Signup first')
         return redirect('home')
+    
+def upload_resume(request):
+    if request.user.is_authenticated:
+        # applicant = Applicant.objects.filter(user=request.user).first()  
+
+        # if not applicant:
+        #     messages.warning(request, "Applicant profile not found.")
+        #     return redirect("create_applicant_profile")  
+
+        if request.method == "POST":
+            form = ResumeForm(request.POST, request.FILES)
+            if form.is_valid():
+                
+                resume_instance = form.save(commit=False)
+                resume_instance.user = request.user  # Assuming Resume has a user field
+                resume_instance.save()
+
+                # add a debugging statement to check for applicant.resume
+                
+                # applicant.save()  # Save the applicant with the resume
+                # print("THis isss: ", applicant.resume.resume.url)
+                messages.success(request, "Resume uploaded successfully!")
+                return resume_instance
+            else:
+                messages.warning(request, "Please enter valid data")
+        
+        else:
+            form = ResumeForm()
+
+        return render(request, "applicant/upload_resume.html", {"form": form})
+
+    else:
+        messages.warning(request, 'Please Login/Signup first')
+        return redirect('home')
+
+
+
+    
+
                 
             
 
