@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+{% csrf_token %}
+
+{% comment %} add a basic homepage {% endcomment %}
+{% comment %} If user is a applicant, show it name, email {% endcomment %}
+{% comment %} else if User is a Recruiter, show it name, email {% endcomment %}
+{% comment %} else redirect to the homepage {% endcomment %}
+
+{% if request.user.is_authenticated %}
+    {% if request.user.is_applicant %}
+        <h1>Welcome {{request.user.first_name}} {{request.user.last_name}}</h1>
+        <p>Your email is {{request.user.email}}</p>
+    {% elif request.user.is_company %}
+        <h1>Welcome {{request.user.first_name}} {{request.user.last_name}}</h1>
+        <p>Your email is {{request.user.email}}</p>
+    {% else %}
+        <h1>Welcome to Django Job Portal</h1>
+        <p>Find the job you need that is tailored to your experience, expertise and skill sets. There's plenty of jobs to go round for everyone. Goodluck with the hunt!</p>
+        <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+        <a href="{% url 'signup' %}" class="btn btn-success">Sign Up</a>
+    {% endif %}
+{% else %}
+        <h1>Welcome to Django Job Portal</h1>
+        <p>Find the job you need that is tailored to your experience, expertise and skill sets. There's plenty of jobs to go round for everyone. Goodluck with the hunt!</p>
+        <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+        <a href="{% url 'signup_applicant' %}" class="btn btn-success">Sign Up as Applicant</a>
+        <a href="{% url 'signup_company' %}" class="btn btn-success">Sign Up as Recruiter</a>
+{% endif %}
+
+
+{% endblock content %}
