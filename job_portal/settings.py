@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'jobListings',
     'applicant',
     'resume',
+    'locations',
+    'industries',
 
 
     "widget_tweaks",

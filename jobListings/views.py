@@ -20,10 +20,10 @@ from django.contrib import messages
 
 def view_all_job_listings(request):
     job_listings = JobListing.objects.all() # write a raw query
-    return render(request, 'jobListings/job_listings.html', {'job_listings': job_listings})
+    return render(request, 'jobListings/job_listings.html', {'jobs': job_listings})
 
 def add_job_listing(request):
-    if request.user.is_authenticated and request.user.is_recruiter:
+    if request.user.is_authenticated and request.user.is_company:
         if request.method == 'POST':
             form = JobListingForm(request.POST)
             if form.is_valid():
@@ -46,7 +46,8 @@ def add_job_listing(request):
     
 def update_job_listing(request, job_id):
     job_listing = JobListing.objects.get(id=job_id)
-    if request.is_authenticated and request.user == job_listing.posted_by and request.user.is_company:
+    print("hellO",job_listing.role)
+    if request.user.is_authenticated and request.user == job_listing.posted_by and request.user.is_company:
         if request.method == 'POST':
             form = JobListingForm(request.POST, instance=job_listing)
             if form.is_valid():
@@ -83,7 +84,7 @@ def delete_job_listing(request, job_id):
     
 def view_job_listing(request, job_id):
     job_listing = JobListing.objects.get(id=job_id)
-    return render(request, 'jobListings/view_job_listing.html', {'job_listing': job_listing})
+    return render(request, 'jobListings/view_job_listing.html', {'job': job_listing})
 
 def apply_for_job(request, job_id):
     if request.user.is_authenticated and not request.is_applicant:
@@ -103,7 +104,7 @@ def apply_for_job(request, job_id):
 def your_job_listings(request):
     if request.user.is_authenticated and request.user.is_company:
         job_listings = JobListing.objects.filter(posted_by=request.user)
-        return render(request, 'jobListings/job_listings.html', {'job_listings': job_listings})
+        return render(request, 'jobListings/job_listings.html', {'jobs': job_listings})
     else:
         messages.error(request, 'You need to be logged in as a recruiter to view your job listings')
         return redirect('login')
@@ -111,7 +112,17 @@ def your_job_listings(request):
 def your_job_applications(request):
     if request.user.is_authenticated and request.user.is_applicant:
         job_applications = JobApplication.objects.filter(user=request.user)
-        return render(request, 'jobListings/your_job_applications.html', {'job_applications': job_applications})
+        return render(request, 'jobListings/applied_jobs.html', {'job_applications': job_applications})
     else:
         messages.error(request, 'You need to be logged in as a job seeker to view your job applications')
         return redirect('login')
+    
+def job_applications_for_job(request, job_id):
+    job_listing = JobListing.objects.get(id=job_id)
+    if request.user.is_authenticated and request.user.is_company and job_listing.posted_by == request.user:
+        job_applications = JobApplication.objects.filter(job=job_listing)
+        return render(request, 'jobListings/job_applications.html', {'job_applications': job_applications})
+    else:
+        messages.error(request, 'You are not authorized to view job applications for this job listing')
+        return redirect('job_listings')
+

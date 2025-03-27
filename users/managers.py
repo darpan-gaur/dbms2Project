@@ -23,7 +23,7 @@ class CustomUserManager(BaseUserManager):
         """
         Create and save a SuperUser with the given email and password.
         """
-        extra_fields.setdefault("is_recruiter", True)
+        extra_fields.setdefault("is_company", True)
         extra_fields.setdefault("is_applicant", True)
         extra_fields.setdefault("is_active", True)
 

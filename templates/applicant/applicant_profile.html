@@ -7,7 +7,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h1>Recruiter Profile</h1>
+            <h1>Applicant Profile</h1>
             <p>Location: {{ applicant.location }}</p>
             <p>Phone Number: {{ applicant.phone_number }}</p>
             <p>Skills: {{ applicant.skills.all|join:", " }}</p>
@@ -19,6 +19,7 @@
             {% endif %}
 
             <a href="{% url 'update_applicant' %}" class="btn btn-primary">Update Profile</a>
+            <a href="{% url 'job_listings' %}" class="btn btn-primary">View Jobs</a>
         </div>
     </div>
 </div>

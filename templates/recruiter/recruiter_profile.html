@@ -11,6 +11,10 @@
             <p>Location: {{ recruiter.company_name }}</p>
             <p>Description: {{ recruiter.company_description }}</p>
             <a href="{% url 'update_recruiter' %}" class="btn btn-primary">Update Profile</a>
+
+            {% comment %} Make a button to post jobs{% endcomment %}
+            <a href="{% url 'add_job' %}" class="btn btn-primary">Post New Job</a>
+            <a href="{% url 'your_job_listings' %}" class="btn btn-primary">View Posted Jobs</a>
         </div>
     </div>
 </div>
