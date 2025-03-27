@@ -30,9 +30,9 @@ def signup_applicant_veiw(request):
             login(request, user)
             return redirect('update_applicant')
         else:
-            print(form.errors)
-            messages.error(request, "Invalid form")
-            return redirect('signup_applicant')
+            messages.error(request, form.errors)
+            form = NewUserForm()
+            return render(request, 'users/signup_applicant.html', {'form': form})
     else:
         form = NewUserForm()
         return render(request, 'users/signup_applicant.html', {'form': form})
@@ -54,9 +54,9 @@ def signup_company_veiw(request):
             login(request, user)
             return redirect("update_recruiter")
         else:
-            print(form.errors)
-            messages.error(request, "Invalid form")
-            return redirect('signup_company')
+            messages.error(request, form.errors)
+            form = NewUserForm()
+            return render(request, 'users/signup_company.html', {'form': form})
     else:
         form = NewUserForm()
         return render(request, 'users/signup_company.html', {'form': form})

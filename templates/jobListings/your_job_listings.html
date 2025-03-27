@@ -25,7 +25,7 @@
                     <td>{{job.role}}</td>
                     <td>{{job.location}}</td>
                     <td>{{job.salary}}</td>
-                    <td>{{job.applyjob_set.all.count }} <a href="{% url 'applications_for_job' job.pk %}"><small>View all</small></a></td> <!-- No. of Applicants Calc-->
+                    <td>{{job.jobapplication_set.all.count }} <a href="{% url 'applications_for_job' job.pk %}"><small>View all</small></a></td> <!-- No. of Applicants Calc-->
 
                     {% if job.is_active %}
                     <td><span class="badge bg-success">Active</span></td>

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="card mx-auto" style="width: 76rem;">
+    <!-- <img src="..." class="card-img-top" alt="..."> -->
+    <div class="card-body">
+        <h5 class="card-title mb-3">Applied Jobs</h5>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Job Role</th>
+                    <th scope="col">Company</th>
+                    <th scope="col">Location</th>
+                    <th scope="col">Salary </th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Application Status</th>
+                    <th scope="col">Withdraw</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for job in job_applications %}
+                <tr>
+                    <td>{{job.job.role}}</td>
+                    <td>{{job.job.company}}</td>
+                    <td>{{job.job.location}}</td>
+                    <td>{{job.job.salary}}</td>
+
+                    {% if job.job.is_active %}
+                    <td><span class="badge bg-success">Active</span></td>
+                    {% else %}
+                    <td><span class="badge bg-warning">Not Active</span></td>
+                    {% endif %}
+
+
+
+                    <td>
+                        {% if job.status == 'Applied' %}
+                        <span class="badge bg-warning">Pending</span>
+                        {% elif job.status == 'A' %}
+                        <span class="badge bg-success">Accepted</span>
+                        {% elif job.status == 'R' %}
+                        <span class="badge bg-danger">Rejected</span>
+                        {% endif %}
+                    </td>
+
+                    {% comment %} <td><a href="{% url '' job.pk %}"><span class="badge bg-danger">Withdraw</span></a></td> {% endcomment %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+         
+    </div>
+
+
+{% endblock content %}

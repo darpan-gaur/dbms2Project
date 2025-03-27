@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="card mx-auto" style="width: 76rem;">
+    <!-- <img src="..." class="card-img-top" alt="..."> -->
+    <div class="card-body">
+        <h5 class="card-title mb-3">Applied Jobs</h5>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Applicant Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Location</th>
+                    <th scope="col">Resume</th>
+                    <th scope="col">Application Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for app in job_applications %}
+                <tr>
+                    <td>{{app.applicant.user.first_name}} {{app.applicant.user.last_name}}</td>
+                    <td>{{app.applicant.user.email}}</td>
+                    <td>{{app.applicant.location}}</td>
+                    <td>
+                        {% if app.applicant.resume %}
+                        <a href="{{ app.applicant.resume.resume.url }}" target="_blank">View Resume</a>
+                        {% else %}
+                        No resume uploaded.
+                        {% endif %}
+                    </td>
+                    </td>
+                    {% if app.status == 'Applied' %}
+                    <td><span class="badge bg-warning">Pending</span></td>
+                    {% elif app.status == 'A' %}
+                    <td><span class="badge bg-success">Accepted</span></td>
+                    {% elif app.status == 'R' %}
+                    <td><span class="badge bg-danger">Rejected</span></td>
+                    {% endif %}
+
+                    {% comment %} @TODO: Application status Manage {% endcomment %}
+
+                    {% comment %} <td>{{job.job.company}}</td>
+                    <td>{{job.job.location}}</td>
+                    <td>{{job.job.salary}}</td>
+
+                    {% if job.job.is_active %}
+                    <td><span class="badge bg-success">Active</span></td>
+                    {% else %}
+                    <td><span class="badge bg-warning">Not Active</span></td>
+                    {% endif %}
+
+
+
+                    <td>
+                        {% if job.status == 'Applied' %}
+                        <span class="badge bg-warning">Pending</span>
+                        {% elif job.status == 'A' %}
+                        <span class="badge bg-success">Accepted</span>
+                        {% elif job.status == 'R' %}
+                        <span class="badge bg-danger">Rejected</span>
+                        {% endif %}
+                    </td>
+                    {% endcomment %}
+                    {% comment %} <td><a href="{% url '' job.pk %}"><span class="badge bg-danger">Withdraw</span></a></td> {% endcomment %}
+                </tr> 
+                {% endfor %}
+            </tbody>
+        </table>
+         
+    </div>
+
+
+{% endblock content %}

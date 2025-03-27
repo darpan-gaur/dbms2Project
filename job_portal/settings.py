@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'recruiter',
     'users',
     'jobListings',
@@ -46,6 +47,8 @@ INSTALLED_APPS = [
     'resume',
     'locations',
     'industries',
+    'homepage',
+    'django_filters',
 
 
     "widget_tweaks",

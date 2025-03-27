@@ -20,26 +20,20 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 {% if request.user.is_authenticated %}
-                {% comment %} {% if request.user.is_applicant %}
+                {% if request.user.is_applicant %}
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url 'dashboard' %}">Home</a>
-                    </li>
-                    {% if request.user.has_resume %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'job-listing' %}">Apply to Jobs</a>
+                        <a class="nav-link active" aria-current="page" href="{% url 'applicant_profile' %}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="{% url 'applied-jobs' %}">Manage Job Applications</a>
+                        <a class="nav-link" href="{% url 'view_all_job_listings' %}">Apply to Jobs</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="{% url 'update-resume' %}">Update Resume</a>
+                        <a class="nav-link" aria-current="page" href="{% url 'applied_jobs' %}">Manage Job Applications</a>
                     </li>
-                    {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'update-resume' %}">Create Resume</a>
+                        <a class="nav-link" aria-current="page" href="{% url 'update_applicant' %}">Update Profile</a>
                     </li>
-                    {% endif %}
                     <li class="nav-item">
                         <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">{{request.user.email}}</a>
                     </li>
@@ -48,18 +42,18 @@
                 {% elif request.user.is_company %}
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url 'dashboard' %}">Home</a>
+                        <a class="nav-link active" aria-current="page" href="{% url 'recruiter_profile' %}">Home</a>
                     </li>
                     {% if request.user.has_company %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'create-job' %}">Create Job Ads</a>
+                        <a class="nav-link" href="{% url 'add_job' %}">Create Job Ads</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'manage-jobs' %}">Manage Jobs</a>
+                        <a class="nav-link" href="{% url 'your_job_listings' %}">Manage Jobs</a>
                     </li>
                     {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'update-company' %}">Create Company</a>
+                        <a class="nav-link" href="{% url 'update_recruiter' %}">Create Company</a>
                     </li>
                     {% endif %}
         
@@ -69,22 +63,24 @@
                     
                 </ul>
                 {% endif %}
+                {% comment %}
                 <a href="{% url 'notifications' %}" class="notification-link" style="margin-right: 50px;color:white">
                     <i class="fa-sharp fa-solid fa-bell fa-xl"></i>
                 </a>
+                {% endcomment %}
                 <a href="{% url 'logout' %}"  style="margin-right: 40px;color:white;">
                     <i class="fa-sharp fa-solid fa-arrow-right-from-bracket fa-xl"></i>
                 </a>
+                {% comment %}
                 <a href="{% url 'delete-user' %}"style="margin-right: 40px;color:white;" >
                     <i class="fa-solid fa-user-minus fa-xl"></i>
                 </a> {% endcomment %}
-                <a href="{% url 'logout' %}" class="btn btn-danger btn-sm">Log Out</a>
                 {% else %}
-                {% comment %} <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url 'job-listing' %}">All Jobs</a>
+                        <a class="nav-link active" aria-current="page" href="{% url 'view_all_job_listings' %}">All Jobs</a>
                     </li>  
-                </ul> {% endcomment %}
+                </ul>
                 <a href="{% url 'login' %}" class="btn btn-warning btn-sm">Log In</a> 
                 {% endif %}
                 

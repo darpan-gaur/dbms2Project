@@ -4,6 +4,7 @@ from resume.models import Resume
 from recruiter.models import RecruitingCompany as R
 from locations.models import Locations
 from industries.models import Industries
+from applicant.models import Applicant
 
 # Create your models here.
 
@@ -30,19 +31,17 @@ class JobListing(models.Model):
     def __str__(self):
         return self.title
 
-class JobStatus(models.Model):
-    status = models.CharField(max_length=20, unique=True)
+# class JobStatus(models.Model):
+#     status = models.CharField(max_length=20, unique=True)
 
-    def __str__(self):
-        return self.status
+#     def __str__(self):
+#         return self.status
 
 class JobApplication(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    applicant = models.ForeignKey(Applicant, on_delete=models.CASCADE)
     job = models.ForeignKey(JobListing, on_delete=models.CASCADE)
-    resume = models.ForeignKey(Resume, on_delete=models.CASCADE)
     applied_on = models.DateTimeField(auto_now_add=True)
-
-    status = models.ForeignKey(JobStatus, on_delete=models.CASCADE)
+    status = models.CharField(max_length=20, default='Applied')
 
     def __str__(self):
         return self.user.username + ' - ' + self.job.title

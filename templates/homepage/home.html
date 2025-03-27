@@ -1,34 +1,70 @@
 {% extends 'base.html' %}
 {% load widget_tweaks %}
+{% load humanize %}
 
 {% block content %}
-{% csrf_token %}
+ <section>
+    <div class="p-5 mb-4 bg-light rounded-3">
+        <div class="container-fluid py-5">
+            <h2 class="display-5 fw-bold">Django Jobs. Get Hired Quickly!</h2> <br>
 
-{% comment %} add a basic homepage {% endcomment %}
-{% comment %} If user is a applicant, show it name, email {% endcomment %}
-{% comment %} else if User is a Recruiter, show it name, email {% endcomment %}
-{% comment %} else redirect to the homepage {% endcomment %}
+            <div class="card">
+                <div class="card-body">
+                    <form class="row gy-2 gx-3 align-items-center" method="GET">
+                        <div class="col-sm-3">
+                            <label for="autoSizingSelect">Company</label>
+                            {% render_field filter.form.company_name class="form-select" %}
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="autoSizingSelect">Role</label>
+                            {% render_field filter.form.role class="form-select" %}
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="autoSizingSelect">location</label>
+                            {% render_field filter.form.location class="form-select" %}
+                        </div>
+                        
+                        {% comment %} <div class="col-sm-3">
+                            <label for="autoSizingSelect">Choose Job Type</label>
+                            {% render_field filter.form. class="form-select" %}
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="autoSizingSelect">Select Industry</label>
+                            {% render_field filter.form.industry class="form-select" %}
+                        </div> {% endcomment %}
 
-{% if request.user.is_authenticated %}
-    {% if request.user.is_applicant %}
-        <h1>Welcome {{request.user.first_name}} {{request.user.last_name}}</h1>
-        <p>Your email is {{request.user.email}}</p>
-    {% elif request.user.is_company %}
-        <h1>Welcome {{request.user.first_name}} {{request.user.last_name}}</h1>
-        <p>Your email is {{request.user.email}}</p>
-    {% else %}
-        <h1>Welcome to Django Job Portal</h1>
-        <p>Find the job you need that is tailored to your experience, expertise and skill sets. There's plenty of jobs to go round for everyone. Goodluck with the hunt!</p>
-        <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
-        <a href="{% url 'signup' %}" class="btn btn-success">Sign Up</a>
-    {% endif %}
-{% else %}
-        <h1>Welcome to Django Job Portal</h1>
-        <p>Find the job you need that is tailored to your experience, expertise and skill sets. There's plenty of jobs to go round for everyone. Goodluck with the hunt!</p>
-        <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
-        <a href="{% url 'signup_applicant' %}" class="btn btn-success">Sign Up as Applicant</a>
-        <a href="{% url 'signup_company' %}" class="btn btn-success">Sign Up as Recruiter</a>
-{% endif %}
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-primary">Search</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <p class="col-md-8 fs-6 mt-3">
+                Welcome to Django Job Portal! Search and get your dream job. We have thousands of job
+                offerings for you. Don't forget to leave a like when you get a job. Goodluck with your job
+                hunt!
+            </p>
+            <a href="{% url 'view_all_job_listings' %}" class="btn btn-outline-primary" type="button">More Jobs</a>
+        </div>
+    </div>
+</section>
 
+ <div class="row row-cols-1 row-cols-md-3 g-4">
+     {% for job in filter.qs %}
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{job.role}}</h5>
+                {% comment %} <p class="card-text">Industry: {{job.industry}}</p> {% endcomment %}
+                <p class="card-text">Job Type: {{job.company.name}}</p>
+                <p class="card-text">Location: {{job.location}}</p>
+                <p class="card-text">Salary: {{job.salary}}</p>
+            </div>
+            <div class="card-footer">
+                <small class="text-muted">{{job.timestamp|naturaltime}}</small>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
 
 {% endblock content %}

@@ -9,10 +9,9 @@ from users.models import CustomUser
 
 def applicant_profile_view(request):
     if request.user.is_authenticated:
-        user_id = request.user.id
-        applicant = Applicant.objects.get(user=user_id)
+        applicant = Applicant.objects.get(user=request.user)
         skills = applicant.skills.all()
-        print("Here", applicant.resume.resume.url)
+        # print("Here", applicant.resume.resume.url)
         return render(request, 'applicant/applicant_profile.html', {'applicant': applicant, 'skills': skills, 'resume': applicant.resume})
 
     if not request.user.is_authenticated:
