@@ -106,12 +106,32 @@ def upload_resume(request):
 
 
 
-    
+def veiw_applicant(request, applicant_id):
+    applicant = Applicant.objects.get(id=applicant_id)
+    return render(request, 'applicant/view_applicant.html', {'applicant': applicant})
 
-                
+
+def view_applicants(request):
+    if request.user.is_superuser:
+        applicants = Applicant.objects.all()
+        return render(request, 'applicant/view_applicants.html', {'applicants': applicants})
+    else:
+        messages.error(request, 'You are not authorized to view this page')
+        return redirect('home')
+    
+def delete_applicant(request, applicant_id):
+    if request.user.is_superuser:
+        applicant = Applicant.objects.get(id=applicant_id)
+        applicant.delete()
+        return redirect('view_applicants')
+    else:
+        messages.error(request, 'You are not authorized to delete this applicant')
+        return redirect('home')
             
-
-
-
-
+def applicant_view_by_email(request, email):
+    user = CustomUser.objects.get(email=email)
+    applicant = Applicant.objects.get(user=user)
+    return render(request, 'applicant/view_applicant.html', {'applicant': applicant})
     
+
+

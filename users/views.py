@@ -40,7 +40,10 @@ def signup_applicant_veiw(request):
 def signup_company_veiw(request):
     if request.user.is_authenticated:
         messages.warning(request, 'You are already Logged In')
-        return redirect('home')         ## TODO: Change this to the company's dashboard
+        return redirect('home')         
+    
+    #check if user already exist
+    # @TODO: Check if user with email already exist
     if request.method == 'POST':
         form = NewUserForm(request.POST)
         if form.is_valid():
@@ -49,7 +52,7 @@ def signup_company_veiw(request):
             user.is_company = True
             user.save()
             login(request, user)
-            return redirect('home')
+            return redirect("update_recruiter")
         else:
             print(form.errors)
             messages.error(request, "Invalid form")

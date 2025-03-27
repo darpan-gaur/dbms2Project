@@ -24,7 +24,8 @@ urlpatterns = [
     path('', include('homepage.urls')),
     path('admin/', admin.site.urls),
     path('jobListings/', include('jobListings.urls')),
-    path('applicant/', include('applicant.urls')),   
+    path('applicant/', include('applicant.urls')),  
+    path('recruiter/', include('recruiter.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:

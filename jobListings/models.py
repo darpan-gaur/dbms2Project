@@ -1,5 +1,7 @@
 from django.db import models
 from users.models import CustomUser as User
+from resume.models import Resume
+from recruiter.models import RecruitingCompany as R
 
 # Create your models here.
 
@@ -30,11 +32,9 @@ class Roles(models.Model):
     
 
 class JobListing(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    #company
-    # title = models.CharField(max_length=100)
+    posted_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    company = models.ForeignKey(R, on_delete=models.CASCADE)
     role = models.ForeignKey(Roles, on_delete=models.CASCADE)
-    #role
     location = models.ForeignKey(Locations, on_delete=models.CASCADE)
     industry = models.ForeignKey(Industries, on_delete=models.CASCADE)
     description = models.TextField()
@@ -42,7 +42,6 @@ class JobListing(models.Model):
     vacancies = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    #skills
 
     def __str__(self):
         return self.title
@@ -56,7 +55,7 @@ class JobStatus(models.Model):
 class JobApplication(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     job = models.ForeignKey(JobListing, on_delete=models.CASCADE)
-    # resume = models.FileField(upload_to='resumes/')
+    resume = models.ForeignKey(Resume, on_delete=models.CASCADE)
     applied_on = models.DateTimeField(auto_now_add=True)
 
     status = models.ForeignKey(JobStatus, on_delete=models.CASCADE)
