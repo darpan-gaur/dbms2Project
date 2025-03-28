@@ -56,11 +56,14 @@ def add_job_listing(request):
     
 def update_job_listing(request, job_id):
     job_listing = JobListing.objects.get(id=job_id)
-    print("hellO",job_listing.role)
+    # print("Job iD is: ", job_id)
+    # print("hellO",job_listing.role)
     if request.user.is_authenticated and request.user == job_listing.posted_by and request.user.is_company:
         if request.method == 'POST':
             form = JobListingForm(request.POST, instance=job_listing)
+            # print(form.errors)
             if form.is_valid():
+                print("Form is valid")
                 job_listing = form.save(commit=False)
                 job_listing.posted_by = request.user
                 company:R = R.objects.filter(user=request.user)
@@ -75,6 +78,9 @@ def update_job_listing(request, job_id):
                     return redirect('recruiter_profile')
                 job_listing.save()
                 return redirect('your_job_listings')
+            else:
+                messages.warning(request, form.errors)
+                return redirect('update_job', job_id=job_id)
         else:
             form = JobListingForm(instance=job_listing)
         return render(request, 'jobListings/update_job_listing.html', {'form': form, 'locations': Locations.objects.all(), 'industries': Industries.objects.all(), 'job_types': JobType.objects.all()})
@@ -97,9 +103,11 @@ def delete_job_listing(request, job_id):
     
     job_listing = job_listing.first()
     if request.user == job_listing.posted_by:
-        applicants = JobApplication.objects.filter(job=job_listing)
-        for applicant in applicants:
-            Notification.objects.filter(user=applicant.user, message=f'{request.user.first_name} has deleted a job listing')
+        applications = JobApplication.objects.filter(job=job_listing)
+        for application in applications:
+            print(application.applicant.user)
+            notification = Notification(user=application.applicant.user, message=f'Your application for the job {job_listing.role} has been deleted')
+            notification.save()
         job_listing.delete()
         return redirect('your_job_listings')
     else:
@@ -121,20 +129,20 @@ def apply_for_job(request, job_id):
     elif request.user.is_applicant:
         job_listing = JobListing.objects.get(id=job_id)
         # print(request.user.is_applicant)
-        applicant = Applicant.objects.filter(user=request.user)
-        if not applicant.exists():
+        applicant_qs = Applicant.objects.filter(user=request.user)
+        if not applicant_qs.exists():
             messages.error(request, 'You need to create an applicant profile to apply for a job')
             return redirect('update_applicant')
-        applicant = applicant.first()
+        applicant = applicant_qs.first()
         # check if the applicant has already applied for the job
-        job_application = JobApplication.objects.filter(applicant=applicant.first(), job=job_listing)
+        job_application = JobApplication.objects.filter(applicant=applicant_qs.first(), job=job_listing)
         if job_application.exists():
             messages.error(request, 'You have already applied for this job')
             return redirect('home')
-        if not applicant.exists():
+        if not applicant_qs.exists():
             messages.error(request, 'You need to create an applicant profile to apply for a job')
             return redirect('applicant_profile')
-        applicant = applicant.first()
+        applicant = applicant_qs.first()
         
         job_application = JobApplication(applicant=applicant, job=job_listing, status=JobStatus.objects.get(id=1))
         applicant_name = f'{applicant.user.first_name} {applicant.user.last_name}'

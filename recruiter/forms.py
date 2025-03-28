@@ -6,4 +6,4 @@ from .models import RecruitingCompany
 class RecruiterProfileForm(forms.ModelForm):
     class Meta:
         model = RecruitingCompany
-        fields = ['company_name', 'company_description']
+        fields = ['company_name', 'company_description', 'industry']

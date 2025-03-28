@@ -2,48 +2,57 @@
 {% load widget_tweaks %}
 
 {% block content %}
-{% csrf_token %}
+<div class="container">
+    <div class="col-md-10 mx-auto col-lg-8">
+        <div class="card shadow p-4">
+            <h2 class="fw-bold text-center text-primary mb-4">Update Applicant Profile</h2>
 
-<form class="p-4 p-md-5 border rounded-3 bg-light" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    
-    <div class="form-floating mb-3">
-        {% render_field form.location class="form-control" %}
-        <label for="floatingInput">Location</label>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- Location Field -->
+                <div class="mb-4">
+                    <label for="location" class="fw-bold">📍 Location:</label>
+                    {% render_field form.location class="form-control" placeholder="Enter your location" %}
+                </div>
+
+                <!-- Phone Number Field -->
+                <div class="mb-4">
+                    <label for="phone_number" class="fw-bold">📞 Phone Number:</label>
+                    {% render_field form.phone_number class="form-control" placeholder="Enter your phone number" %}
+                </div>
+
+                <!-- Skills Field (Checkboxes) -->
+                <div class="mb-4">
+                    <label class="fw-bold">💡 Skills:</label>
+                    <div class="form-check">
+                        {% for skill in form.skills %}
+                            <div class="form-check mb-2">
+                                {{ skill.tag }} {{ skill.choice_label }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Resume Upload Field -->
+                <div class="mb-4">
+                    <label for="resume" class="fw-bold">📄 Upload Resume:</label>
+                    <input type="file" name="resume" id="resume" class="form-control">
+                    {% if applicant.resume %}
+                        <small class="text-muted mt-2 d-block">Current Resume: 
+                            <a href="{{ applicant.resume.resume.url }}" target="_blank">View Resume</a>
+                        </small>
+                    {% endif %}
+                </div>
+
+                <!-- Buttons -->
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{% url 'applicant_profile' %}" class="btn btn-outline-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                </div>
+
+            </form>
+        </div>
     </div>
-    
-    <div class="form-floating mb-3">
-        {% render_field form.phone_number class="form-control" %}
-        <label for="floatingInput">Phone Number</label>
-    </div>
-
-    {% comment %} skills = forms.ModelMultipleChoiceField(
-        queryset=Skills.objects.all(), 
-        widget=forms.CheckboxSelectMultiple(),
-        required=False
-    ) {% endcomment %}
-
-    <div class="mb-3">
-        <label>Skills</label>
-        {% for skill in form.skills %}
-            <div class="form-check">
-                {{ skill.tag }}
-                {{ skill.choice_label }}
-            </div>
-        {% endfor %}
-    </div>
-
-   
-
-    <div class="mb-3">
-        <label for="resume">Resume</label>
-        <input type="file" name="resume" id="resume" class="form-control">
-    </div>
-
-    <button class="w-100 btn btn-lg btn-primary" type="submit">Update</button>
-</form>
-
-
-
-
+</div>
 {% endblock content %}

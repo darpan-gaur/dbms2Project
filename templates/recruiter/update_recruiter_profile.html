@@ -2,25 +2,42 @@
 {% load widget_tweaks %}
 
 {% block content %}
-{% csrf_token %}
+<div class="container">
+    <div class="col-md-10 mx-auto col-lg-8">
+        <div class="card shadow p-4">
+            <h2 class="fw-bold text-center text-primary mb-4">Create a New Company</h2>
 
-<form class="p-4 p-md-5 border rounded-3 bg-light" method="POST">
-    {% csrf_token %}
-    
-    <div class="form-floating mb-3">
-        {% render_field form.company_name class="form-control" %}
-        <label for="floatingInput">Company Name</label>
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="mb-4">
+                    <label for="company_name" class="fw-bold">🏢 Company Name:</label>
+                    {% render_field form.company_name class="form-control" placeholder="Enter company name" %}
+                </div>
+
+                <div class="mb-4">
+                    <label for="company_description" class="fw-bold">📝 Company Description:</label>
+                    {% render_field form.company_description class="form-control" placeholder="Enter a brief description" %}
+                </div>
+
+                <div class="mb-4">
+                    <label for="industry" class="fw-bold">🏭 Industry:</label>
+                    <select name="industry" class="form-select">
+                        <option value="">Select Industry</option>
+                        {% for industry in industries %}
+                            <option value="{{ industry.id }}" {% if request.GET.industry == industry.id|stringformat:"s" %}selected{% endif %}>
+                                {{ industry.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'recruiter_profile' %}" class="btn btn-outline-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Create Company</button>
+                </div>
+            </form>
+        </div>
     </div>
-    
-    <div class="form-floating mb-3">
-        {% render_field form.company_description class="form-control" %}
-        <label for="floatingInput">Company Description</label>
-    </div>
-
-    <button class="w-100 btn btn-lg btn-primary" type="submit">Update</button>
-</form>
-
-
-
-
+</div>
 {% endblock content %}
