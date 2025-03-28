@@ -2,7 +2,7 @@ from django.shortcuts import render
 from jobListings.models import JobListing, JobType
 from locations.models import Locations
 from industries.models import Industries
-from .filter import Jobfilter
+
 
 # Create your views here.
 def home_view(request):
