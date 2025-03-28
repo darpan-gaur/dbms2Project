@@ -5,3 +5,10 @@
 staticfiles/*
 media/*
 
+# .out, .aux, .fls, .log, .fdb_latexmk, .synctex.gz
+*.out
+*.aux
+*.fls
+*.log
+*.fdb_latexmk
+*.synctex.gz
