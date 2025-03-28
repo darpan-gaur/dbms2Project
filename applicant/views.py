@@ -71,7 +71,7 @@ def update_applicant_view(request):
                     applicant_instance.resume = resume_ins
 
                     applicant_instance.save()  # Save the updated object
-                    print("THis isss: ", applicant_instance.resume.resume.url)
+                    print("This is: ", applicant_instance.resume.resume.url)
 
                 return redirect('applicant_profile')
 
@@ -106,7 +106,7 @@ def upload_resume(request):
                 # add a debugging statement to check for applicant.resume
                 
                 # applicant.save()  # Save the applicant with the resume
-                # print("THis isss: ", applicant.resume.resume.url)
+                # print("This is: ", applicant.resume.resume.url)
                 messages.success(request, "Resume uploaded successfully!")
                 return resume_instance
             else:

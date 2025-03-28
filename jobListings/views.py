@@ -57,7 +57,7 @@ def add_job_listing(request):
 def update_job_listing(request, job_id):
     job_listing = JobListing.objects.get(id=job_id)
     # print("Job iD is: ", job_id)
-    # print("hellO",job_listing.role)
+    # print("hello",job_listing.role)
     if request.user.is_authenticated and request.user == job_listing.posted_by and request.user.is_company:
         if request.method == 'POST':
             form = JobListingForm(request.POST, instance=job_listing)
@@ -211,6 +211,8 @@ def withdraw_application(request, job_id):
         applicant = applicant.first()
         job_application = JobApplication.objects.filter(applicant=applicant, job=job_listing)
         if job_application.exists():
+            notification = Notification(user=job_listing.posted_by, message=f'{applicant.user.first_name} {applicant.user.last_name} has withdrawn their application for the job {job_listing.role}')
+            notification.save()
             job_application.delete()
             messages.success(request, 'Application withdrawn successfully')
             return redirect('applied_jobs')
@@ -229,6 +231,10 @@ def update_application_status(request, app_id):
             status = request.POST.get('status')
             print(status)
             job_application.status = JobStatus.objects.get(id=status)
+            applicants = Applicant.objects.filter(user=job_application.applicant.user)
+            for applicant in applicants:
+                notification = Notification(user=applicant.user, message=f'Your application for the job {job_application.job.role} at the company {job_application.job.company.company_name} has been updated to {job_application.status}')
+                notification.save()
             job_application.save()
             messages.success(request, 'Application status updated successfully')
             return redirect('applications_for_job', job_id=job_application.job.id)
