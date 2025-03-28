@@ -14,6 +14,10 @@ def view_recruiter_profile(request):
         else:
             messages.warning(request, 'You are not a recruiter')
             return redirect('home')
+    else:
+        messages.warning(request, 'You need to login first')
+        return redirect('login')
+        
 
 def update_recruiter_profile(request):
     if request.user.is_authenticated: 

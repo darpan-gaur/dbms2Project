@@ -35,6 +35,7 @@
                     {% if job.jobapplication_set.all.count == job.vacancies %}
                     <td><span class="badge bg-danger">Full</span></td>
                     {% else %}
+                    
                     <td><a href="{% url 'apply_job' job.pk %}"><span class="badge bg-secondary">Apply</span></a></td>
                     {% endif %}
                 </tr>

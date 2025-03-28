@@ -9,7 +9,11 @@ from users.models import CustomUser
 
 def applicant_profile_view(request):
     if request.user.is_authenticated:
-        applicant = Applicant.objects.get(user=request.user)
+        applicant = Applicant.objects.filter(user=request.user)
+        if not applicant.exists():
+            messages.warning(request, 'Applicant profile not found')
+            return redirect('update_applicant')
+        applicant = applicant.first()
         skills = applicant.skills.all()
         # print("Here", applicant.resume.resume.url)
         return render(request, 'applicant/applicant_profile.html', {'applicant': applicant, 'skills': skills, 'resume': applicant.resume})
@@ -120,7 +124,11 @@ def upload_resume(request):
 
 
 def veiw_applicant(request, applicant_id):
-    applicant = Applicant.objects.get(id=applicant_id)
+    applicant = Applicant.objects.filter(id=applicant_id)
+    if not applicant.exists():
+        messages.warning(request, 'Applicant not found')
+        return redirect('home')
+    applicant = applicant.first()
     return render(request, 'applicant/view_applicant.html', {'applicant': applicant})
 
 
@@ -134,7 +142,11 @@ def view_applicants(request):
     
 def delete_applicant(request, applicant_id):
     if request.user.is_superuser:
-        applicant = Applicant.objects.get(id=applicant_id)
+        applicant = Applicant.objects.filter(id=applicant_id)
+        if not applicant.exists():
+            messages.warning(request, 'Applicant not found')
+            return redirect('view_applicants')
+        applicant = applicant.first()
         applicant.delete()
         return redirect('view_applicants')
     else:
@@ -143,7 +155,11 @@ def delete_applicant(request, applicant_id):
             
 def applicant_view_by_email(request, email):
     user = CustomUser.objects.get(email=email)
-    applicant = Applicant.objects.get(user=user)
+    applicant = Applicant.objects.filter(user=user)
+    if not applicant.exists():
+        messages.warning(request, 'Applicant not found')
+        return redirect('home')
+    applicant = applicant.first()
     return render(request, 'applicant/view_applicant.html', {'applicant': applicant})
     
 

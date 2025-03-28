@@ -24,7 +24,7 @@ from locations.models import Locations
 
 
 def view_all_job_listings(request):
-    return redirect('home')
+    return render(request, 'jobListings/all_job_listings.html', {'jobs': JobListing.objects.all()})
 
 def add_job_listing(request):
     if request.user.is_authenticated and request.user.is_company:
@@ -80,9 +80,16 @@ def update_job_listing(request, job_id):
         return render(request, 'jobListings/update_job_listing.html', {'form': form, 'locations': Locations.objects.all(), 'industries': Industries.objects.all(), 'job_types': JobType.objects.all()})
     else:
         messages.error(request, 'You are not authorized to update this job listing')
-        return redirect('job_listings')
+        return redirect('home')
     
 def delete_job_listing(request, job_id):
+    if not request.user.is_authenticated:
+        messages.error(request, 'You need to be logged in to delete a job listing')
+        return redirect('login')
+    if not request.user.is_company:
+        messages.error(request, 'You need to be logged in as a recruiter to delete a job listing')
+        return redirect('home')
+
     job_listing = JobListing.objects.filter(id=job_id)
     if not job_listing.exists():
         messages.error(request, 'Job listing not found')
@@ -110,11 +117,15 @@ def apply_for_job(request, job_id):
         return redirect('login')
     elif request.user.is_company:
         messages.error(request, 'You need to be logged in as an applicant to apply for a job')
-        return redirect('login')
+        return redirect('home')
     elif request.user.is_applicant:
         job_listing = JobListing.objects.get(id=job_id)
-        print(request.user.is_applicant)
+        # print(request.user.is_applicant)
         applicant = Applicant.objects.filter(user=request.user)
+        if not applicant.exists():
+            messages.error(request, 'You need to create an applicant profile to apply for a job')
+            return redirect('update_applicant')
+        applicant = applicant.first()
         # check if the applicant has already applied for the job
         job_application = JobApplication.objects.filter(applicant=applicant.first(), job=job_listing)
         if job_application.exists():
@@ -133,21 +144,37 @@ def apply_for_job(request, job_id):
     
     
 def your_job_listings(request):
-    if request.user.is_authenticated and request.user.is_company:
+    if not request.user.is_authenticated:
+        messages.error(request, 'You need to be logged in as a recruiter to view your job listings')
+        return redirect('login')
+    elif request.user.is_applicant:
+        messages.error(request, 'You need to be logged in as a recruiter to view your job listings')
+        return redirect('home')
+    elif request.user.is_company:
         job_listings = JobListing.objects.filter(posted_by=request.user)
         return render(request, 'jobListings/your_job_listings.html', {'jobs': job_listings})
     else:
         messages.error(request, 'You need to be logged in as a recruiter to view your job listings')
-        return redirect('login')
+        return redirect('home')
     
 def your_job_applications(request):
-    if request.user.is_authenticated and request.user.is_applicant:
-        applicant = Applicant.objects.get(user=request.user)
+    if not request.user.is_authenticated:
+        messages.error(request, 'You need to be logged in as an applicant to view your job applications')
+        return redirect('login')
+    elif request.user.is_company:
+        messages.error(request, 'You need to be logged in as an applicant to view your job applications')
+        return redirect('home')
+    elif request.user.is_applicant:
+        applicant = Applicant.objects.filter(user=request.user)
+        if not applicant.exists():
+            messages.error(request, 'You need to create an applicant profile to view your job applications')
+            return redirect('update_applicant')
+        applicant = applicant.first()
         job_applications = JobApplication.objects.filter(applicant=applicant)
         return render(request, 'jobListings/applied_jobs.html', {'job_applications': job_applications})
     else:
         messages.error(request, 'You need to be logged in as an applicant to view your job applications')
-        return redirect('login')
+        return redirect('home')
     
 def job_applications_for_job(request, job_id):
     job_listing = JobListing.objects.get(id=job_id)
@@ -157,13 +184,23 @@ def job_applications_for_job(request, job_id):
         return render(request, 'jobListings/job_applications.html', {'job_applications': job_applications, 'app_status': app_status})
     else:
         messages.error(request, 'You are not authorized to view job applications for this job listing')
-        return redirect('job_listings')
+        return redirect('home')
     
 
 def withdraw_application(request, job_id):
     job_listing = JobListing.objects.get(id=job_id)
-    if request.user.is_authenticated and request.user.is_applicant:
-        applicant = Applicant.objects.get(user=request.user)
+    if not request.user.is_authenticated:
+        messages.error(request, 'You need to be logged in as an applicant to withdraw an application')
+        return redirect('login')
+    elif request.user.is_company:
+        messages.error(request, 'You need to be logged in as an applicant to withdraw an application')
+        return redirect('home')
+    elif request.user.is_applicant:
+        applicant = Applicant.objects.filter(user=request.user)
+        if not applicant.exists():
+            messages.error(request, 'You need to create an applicant profile to withdraw an application')
+            return redirect('update_applicant')
+        applicant = applicant.first()
         job_application = JobApplication.objects.filter(applicant=applicant, job=job_listing)
         if job_application.exists():
             job_application.delete()
@@ -174,7 +211,7 @@ def withdraw_application(request, job_id):
             return redirect('applied_jobs')
     else:
         messages.error(request, 'You need to be logged in as an applicant to withdraw an application')
-        return redirect('login')
+        return redirect('home')
     
 def update_application_status(request, app_id):
     print(app_id)
@@ -192,4 +229,4 @@ def update_application_status(request, app_id):
             return redirect('applications_for_job', job_id=job_application.job.id)
     else:
         messages.error(request, 'You are not authorized to update the status of this application')
-        return redirect('job_listings')
+        return redirect('home')
