@@ -3,52 +3,60 @@
 
 {% block content %}
 
-<form class="p-4 p-md-5 border rounded-3 bg-light" method="POST">
-    {% csrf_token %}
-    <div class="form-floating mb-3">
-        {% render_field form.role class="form-control" %}
-        <label for="floatingInput">role</label>
-    </div>
-    <div class="form-floating mb-3">
-        <select name="location" id="location" class="form-control">
-            {% for location in locations %}
-                <option value="{{ location.id }}">{{ location.name }}</option>
-            {% endfor %}
-        </select>
-        <label for="location">Location</label>
-    </div>
+    <div class="card shadow-lg p-4" style="width: 100%; border-radius: 10px;">
+        <h2 class="text-center mb-4 text-primary">Add Job</h2>
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="mb-3">
+                <label class="form-label fw-bold text-dark">Role</label>
+                {% render_field form.role class="form-control border rounded shadow-sm bg-white text-dark" %}
+            </div>
+            
+            <div class="mb-3">
+                <label for="location" class="form-label fw-bold text-dark">Location</label>
+                <select name="location" id="location" class="form-select border rounded shadow-sm bg-white text-dark">
+                    {% for location in locations %}
+                        <option value="{{ location.id }}">{{ location.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-    <div class="form-floating mb-3">
-        <select name="industry" id="industry" class="form-control">
-            {% for industry in industries %}
-                <option value="{{ industry.id }}">{{ industry.name }}</option>
-            {% endfor %}
-        </select>
-        <label for="industry">Industry</label>
-    </div>
+            <div class="mb-3">
+                <label for="industry" class="form-label fw-bold text-dark">Industry</label>
+                <select name="industry" id="industry" class="form-select border rounded shadow-sm bg-white text-dark">
+                    {% for industry in industries %}
+                        <option value="{{ industry.id }}">{{ industry.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-    <div class="form-floating mb-3">
-        <select name="job_type" id="job_type" class="form-control">
-            {% for job_type in job_types %}
-                <option value="{{ job_type.id }}">{{ job_type.name }}</option>
-            {% endfor %}
-        </select>
-        <label for="job_type">Job Type</label>
-    </div>
-    <div class="form-floating mb-3">
-        {% render_field form.description class="form-control" %}
-        <label for="floatingInput">Description</label>
-    </div>
-    <div class="form-floating mb-3">
-        {% render_field form.salary class="form-control" %}
-        <label for="floatingInput">salary</label>
-    </div>
-    <div class="form-floating mb-3">
-        {% render_field form.vacancies class="form-control" %}
-        <label for="floatingInput">vacancies</label>
-    </div>
+            <div class="mb-3">
+                <label for="job_type" class="form-label fw-bold text-dark">Job Type</label>
+                <select name="job_type" id="job_type" class="form-select border rounded shadow-sm bg-white text-dark">
+                    {% for job_type in job_types %}
+                        <option value="{{ job_type.id }}">{{ job_type.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label fw-bold text-dark">Description</label>
+                {% render_field form.description class="form-control border rounded shadow-sm bg-white text-dark" %}
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label fw-bold text-dark">Salary</label>
+                {% render_field form.salary class="form-control border rounded shadow-sm bg-white text-dark" %}
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label fw-bold text-dark">Vacancies</label>
+                {% render_field form.vacancies class="form-control border rounded shadow-sm bg-white text-dark" %}
+            </div>
 
-    <button class="w-100 btn btn-lg btn-primary" type="submit">Add Job</button>
-</form>
+            <button class="btn btn-primary w-100 py-2 shadow-sm fw-bold" type="submit">Add Job</button>
+        </form>
+    </div>
 
 {% endblock content %}

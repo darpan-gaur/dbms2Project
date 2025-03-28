@@ -71,9 +71,12 @@ def login_view(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         user = authenticate(request, email=email, password=password)
-        if user is not None:
+        if user is not None and user.is_applicant:
             login(request, user)
             return redirect('applicant_profile')
+        elif user is not None and user.is_company:
+            login(request, user)
+            return redirect('recruiter_profile')
         else:
             messages.error(request, 'Invalid email or password')
             return redirect('login')

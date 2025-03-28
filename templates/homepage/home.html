@@ -6,7 +6,8 @@
  <section>
 <div class="p-5 mb-4 bg-light rounded-3">
     <div class="container-fluid py-5">
-        <h2 class="display-5 fw-bold">Django Jobs. Get Hired Quickly!</h2> <br>
+        <h2 class="fw-bold text-primary">Find Your Dream Job Instantly!</h2>
+        <p class="text-muted">Browse thousands of job listings and apply with ease.</p>
 
         <div class="card">
             <div class="card-body">
@@ -68,9 +69,12 @@
             </div>
         </div>
 
-        <p class="col-md-8 fs-6 mt-3">
-            Welcome to Django Job Portal! Search and get your dream job. We have thousands of job
+        {% comment %} <p class="col-md-8 fs-6 mt-3">
+            Welcome to Job-at-Glance! Search and get your dream job. We have thousands of job
             offerings for you. Don't forget to leave a like when you get a job. Good luck with your job hunt!
+        </p>  {% endcomment %}
+        <p>
+
         </p>
         <a href="{% url 'home' %}" class="btn btn-outline-primary" type="button">More Jobs</a>
     </div>

@@ -1,30 +1,53 @@
-{% extends 'users/base.html' %}
-{% load widget_tweaks %}
+{% extends 'base.html' %}
 
 {% block content %}
-
-<!-- display applicant info -->
 <div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <h1>Applicant Profile</h1>
-            <p>Location: {{ applicant.location }}</p>
-            <p>Phone Number: {{ applicant.phone_number }}</p>
-            <p>Skills: {{ applicant.skills.all|join:", " }}</p>
-            
-            {% if applicant.resume %}
-                <p>Resume: <a href="{{ resume.resume.url }}" target="_blank">View Resume</a></p>
-            {% else %}
-                <p>No resume uploaded.</p>
-            {% endif %}
+    <div class="col-md-10 mx-auto col-lg-8">
+        <div class="card shadow-sm p-4">
+            <h2 class="text-center text-primary mb-4">Applicant Profile</h2>
 
-            <a href="{% url 'update_applicant' %}" class="btn btn-primary">Update Profile</a>
-            <a href="{% url 'home' %}" class="btn btn-primary">View Jobs</a>
-            <a href="{% url 'applied_jobs' %}" class="btn btn-primary">View Applications</a>
+            <div class="mb-4">
+                <h5 class="fw-bold">🙍‍♂️ Name:</h5>
+                <p class="text-muted">{{ applicant.user.first_name }} {{ applicant.user.last_name }}</p>
+            </div>
+
+            <div class="mb-4">
+                <h5 class="fw-bold">📍 Location:</h5>
+                <p class="text-muted">{{ applicant.location }}</p>
+            </div>
+
+            <div class="mb-4">
+                <h5 class="fw-bold">📞 Phone Number:</h5>
+                <p class="text-muted">{{ applicant.phone_number }}</p>
+            </div>
+
+            <div class="mb-4">
+                <h5 class="fw-bold">💡 Skills:</h5>
+                <p class="text-muted">
+                    {% if applicant.skills.all %}
+                        {{ applicant.skills.all|join:", " }}
+                    {% else %}
+                        <span class="text-muted">No skills added</span>
+                    {% endif %}
+                </p>
+            </div>
+
+            <div class="mb-4">
+                <h5 class="fw-bold">📄 Resume:</h5>
+                {% if applicant.resume %}
+                    <a href="{{ applicant.resume.resume.url }}" class="btn btn-outline-primary btn-sm" target="_blank">
+                        View Resume
+                    </a>
+                {% else %}
+                    <p class="text-muted">No resume uploaded</p>
+                {% endif %}
+            </div>
+
+            <div class="d-flex mb-4 justify-content-between">
+                <a href="{% url 'update_applicant' %}" class="btn btn-primary">Update Profile</a>
+                <a href="{% url 'view_all_job_listings' %}" class="btn btn-success">View Jobs</a>
+            </div>
         </div>
     </div>
 </div>
-
-
-
 {% endblock content %}

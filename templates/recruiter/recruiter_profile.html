@@ -1,23 +1,36 @@
-{% extends 'users/base.html' %}
-{% load widget_tweaks %}
+{% extends 'base.html' %}
 
 {% block content %}
-
-<!-- display applicant info -->
 <div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <h1>Recruiter Profile</h1>
-            <p>Location: {{ recruiter.company_name }}</p>
-            <p>Description: {{ recruiter.company_description }}</p>
-            <a href="{% url 'update_recruiter' %}" class="btn btn-primary">Update Profile</a>
+    <div class="col-md-10 mx-auto col-lg-8">
+        <div class="card shadow-sm p-4">
+            <h2 class="text-center text-primary mb-4">Recruiter Profile</h2>
 
-            {% comment %} Make a button to post jobs{% endcomment %}
-            <a href="{% url 'add_job' %}" class="btn btn-primary">Post New Job</a>
-            <a href="{% url 'your_job_listings' %}" class="btn btn-primary">View Posted Jobs</a>
+            <div class="mb-4">
+                <h5 class="fw-bold">🙍‍♂️ Name:</h5>
+                <p class="text-muted">{{ recruiter.user.first_name }} {{ recruiter.user.last_name }}</p>
+            </div>
+
+            <div class="mb-4">
+                <h5 class="fw-bold">📄 Description:</h5>
+                <p class="text-muted">{{ recruiter.company_description }}</p>
+            </div>
+
+            <!-- <div class="d-flex mb-4 justify-content-between">
+                <a href="{% url 'update_recruiter' %}" class="btn btn-primary">Update Profile</a>
+                <a href="{% url 'add_job' %}" class="btn btn-primary">Post New Job</a>
+                <a href="{% url 'your_job_listings' %}" class="btn btn-success">View Jobs</a>
+            </div> -->
+            <!-- put one butten to left and two button to the right -->
+            <div class="d-flex mb-4 justify-content-between">
+                <a href="{% url 'update_recruiter' %}" class="btn btn-primary">Update Profile</a>
+                <div>
+                    <a href="{% url 'add_job' %}" class="btn btn-primary">Post New Job</a>
+                
+                    <a href="{% url 'your_job_listings' %}" class="btn btn-success">View Jobs</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
-
 {% endblock content %}

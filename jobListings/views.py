@@ -38,7 +38,7 @@ def add_job_listing(request):
                 
                 if company.exists():
                     for applicant in applicants:
-                        notification = Notification(user=applicant.user, message=f'{request.user.username} has posted a new job listing for the role {job_listing.role} at {company.first().company_name}')
+                        notification = Notification(user=applicant.user, message=f'{request.user.first_name} has posted a new job listing for the role {job_listing.role} at {company.first().company_name}')
                         notification.save()
                     job_listing.company = company.first()
                     messages.success(request, 'Job listing added successfully')
@@ -68,7 +68,7 @@ def update_job_listing(request, job_id):
                 if company.exists():
                     job_listing.company = company.first()
                     for applicant in applicants:
-                        notification = Notification(user=applicant.user, message=f'{request.user.username} has updated a job listing')
+                        notification = Notification(user=applicant.user, message=f'{request.user.first_name} has updated a job listing')
                         notification.save()
                 else:
                     messages.error(request, 'You need to create a company profile to post a job listing')
@@ -92,7 +92,7 @@ def delete_job_listing(request, job_id):
     if request.user == job_listing.posted_by:
         applicants = JobApplication.objects.filter(job=job_listing)
         for applicant in applicants:
-            Notification.objects.filter(user=applicant.user, message=f'{request.user.username} has deleted a job listing')
+            Notification.objects.filter(user=applicant.user, message=f'{request.user.first_name} has deleted a job listing')
         job_listing.delete()
         return redirect('your_job_listings')
     else:
