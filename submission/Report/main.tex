@@ -42,12 +42,22 @@ The Job Portal system serves as a platform that bridges job seekers and employer
 
 \section*{Database Design}
 ER Diagram: Figure \ref{fig:ER Diagram} shows the ER Diagram of the database.
+The following tables are present in the database:
 \begin{figure}[h]
     \centering
     \includegraphics[width=1.0\textwidth]{../images/ERD.png}
     \caption{ER Diagram}
     \label{fig:ER Diagram}
 \end{figure}
+
+\subsection*{Functional Dependencies}
+\begin{itemize}
+    \item User\_id $\implies$ Email, Password, Mobile \quad [\texttt{Users Table}]
+    \item Job\_id $\implies$ Role, Description, Salary, Vacancy, Location, Industry, Company\_id [\texttt{JobsListing Table}]
+    \item Application\_id $\implies$ User\_id, Resume\_id, Job\_id, Status [\texttt{Applications Table}]
+    \item Industry\_id $\implies$ Industry\_name [\texttt{Industry Table}]
+    \item Company\_id $\implies$ Company\_name, Company\_description [\texttt{Company Table}]
+\end{itemize}
 
 \section*{Technology Stack}
 \begin{itemize}
