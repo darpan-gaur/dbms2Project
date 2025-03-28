@@ -10,4 +10,8 @@ urlpatterns = [
     path('your-job-listings/', views.your_job_listings, name='your_job_listings'),
     path('your-job-applications/', views.your_job_applications, name='applied_jobs'),
     path('applications/<int:job_id>/', views.job_applications_for_job, name='applications_for_job'),
+    path('withdraw-application/<int:job_id>/', views.withdraw_application, name='withdraw_application'),
+    path('job/<int:job_id>/', views.view_job_listing, name='job_details'),
+    path('update-status/<int:app_id>/', views.update_application_status, name='update_status'),
+
 ]

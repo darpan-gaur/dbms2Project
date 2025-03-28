@@ -5,7 +5,7 @@
 <div class="card mx-auto" style="width: 76rem;">
     <!-- <img src="..." class="card-img-top" alt="..."> -->
     <div class="card-body">
-        <h5 class="card-title mb-3">Applied Jobs</h5>
+        <h5 class="card-title mb-3">Applications</h5>
 
         <table class="table table-bordered">
             <thead>
@@ -15,6 +15,8 @@
                     <th scope="col">Location</th>
                     <th scope="col">Resume</th>
                     <th scope="col">Application Status</th>
+                    <th scope="col">update Status</th>
+                    
                 </tr>
             </thead>
             <tbody>
@@ -30,17 +32,36 @@
                         No resume uploaded.
                         {% endif %}
                     </td>
-                    </td>
-                    {% if app.status == 'Applied' %}
-                    <td><span class="badge bg-warning">Pending</span></td>
-                    {% elif app.status == 'A' %}
-                    <td><span class="badge bg-success">Accepted</span></td>
-                    {% elif app.status == 'R' %}
-                    <td><span class="badge bg-danger">Rejected</span></td>
+                    <td>
+                    {% if app.status.id == 1 %}
+                        <span class="badge bg-warning">Applied</span>
+                        {% elif app.status.id == 2 %}
+                        {% comment %} shortlisted {% endcomment %}
+                        <span class="badge bg-success">Shortlisted</span>
+                        {% elif app.status.id == 3 %}
+                        {% comment %} Rejected {% endcomment %}
+                        <span class="badge bg-danger">Rejected</span>
+                        {% elif app.status.id == 4 %}
+                        {% comment %} Hired {% endcomment %}
+                        <span class="badge bg-success">Hired</span>
                     {% endif %}
+                    </td>
 
-                    {% comment %} @TODO: Application status Manage {% endcomment %}
+                    <td>
+                        <form method="POST" class="form-inline">
+                            {% csrf_token %}
+                            <select name="status" id="status">
+                                <option value="0" disabled selected>update status</option>
+                                {% for st in app_status %}
+                                {% if st.id != app.status.id %}
+                                <option value="{{ st.id }}">{{ st.status }}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                            <button type="submit" class="btn btn-primary" formaction="{% url 'update_status' app.id %}">Update</button>
+                        </form>
 
+                    
                     {% comment %} <td>{{job.job.company}}</td>
                     <td>{{job.job.location}}</td>
                     <td>{{job.job.salary}}</td>

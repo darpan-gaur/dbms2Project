@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load humanize %}
+
+{% block content %}
+
+{% comment %} 
+# Create your views here.
+def view_industries(request):
+    industries = Industry.objects.all()
+    return render(request, 'industries/industries.html', {'industries': industries}) {% endcomment %}
+
+{% comment %} Just display all the industries coming from above view {% endcomment %}
+<div>
+    <h1>locations</h1>
+    <ul>
+        {% for location in locations %}
+        <li>{{location.name}}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+
+
+{% endblock content %}

@@ -17,16 +17,23 @@
         <label for="floatingInput">Phone Number</label>
     </div>
 
+    {% comment %} skills = forms.ModelMultipleChoiceField(
+        queryset=Skills.objects.all(), 
+        widget=forms.CheckboxSelectMultiple(),
+        required=False
+    ) {% endcomment %}
+
     <div class="mb-3">
-        <label for="skills">Skills</label>
-        <select name="skills" id="skills" class="form-select" multiple>
-            {% for skill in form.skills.field.queryset %}
-                <option value="{{ skill.id }}" {% if skill in form.instance.skills.all %}selected{% endif %}>
-                    {{ skill.name }}
-                </option>
-            {% endfor %}
-        </select>
+        <label>Skills</label>
+        {% for skill in form.skills %}
+            <div class="form-check">
+                {{ skill.tag }}
+                {{ skill.choice_label }}
+            </div>
+        {% endfor %}
     </div>
+
+   
 
     <div class="mb-3">
         <label for="resume">Resume</label>

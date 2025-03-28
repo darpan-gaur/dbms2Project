@@ -1,0 +1,25 @@
+{% extends 'users/base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+<!-- display applicant info -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Job Details</h1>
+            <p>Role: {{ job.role }}</p>
+            <p>Company: {{ job.company.company_name }}</p>
+            <p>Location: {{ job.location.name }}</p>
+            <p>Salary: {{ job.salary }}</p>
+            <p>Job Type: {{ job.job_type.name }}</p>
+            <p>Industry: {{ job.industry.name }}</p>
+            <p>Description: {{ job.description }}</p>
+            <p>Vacancies: {{ job.vacancies }}</p>
+            <a href="{% url 'apply_job' job.pk %}" class="btn btn-primary">Apply</a>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}

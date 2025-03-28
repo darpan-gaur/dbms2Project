@@ -26,7 +26,7 @@
                         <a class="nav-link active" aria-current="page" href="{% url 'applicant_profile' %}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'view_all_job_listings' %}">Apply to Jobs</a>
+                        <a class="nav-link" href="{% url 'home' %}">Apply to Jobs</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" aria-current="page" href="{% url 'applied_jobs' %}">Manage Job Applications</a>
@@ -63,11 +63,11 @@
                     
                 </ul>
                 {% endif %}
-                {% comment %}
-                <a href="{% url 'notifications' %}" class="notification-link" style="margin-right: 50px;color:white">
+                
+                <a href="{% url 'all_notifications' %}" class="notification-link" style="margin-right: 50px;color:white">
                     <i class="fa-sharp fa-solid fa-bell fa-xl"></i>
                 </a>
-                {% endcomment %}
+                
                 <a href="{% url 'logout' %}"  style="margin-right: 40px;color:white;">
                     <i class="fa-sharp fa-solid fa-arrow-right-from-bracket fa-xl"></i>
                 </a>
@@ -78,7 +78,7 @@
                 {% else %}
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url 'view_all_job_listings' %}">All Jobs</a>
+                        <a class="nav-link active" aria-current="page" href="{% url 'home' %}">All Jobs</a>
                     </li>  
                 </ul>
                 <a href="{% url 'login' %}" class="btn btn-warning btn-sm">Log In</a> 

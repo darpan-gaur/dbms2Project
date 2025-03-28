@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block content %}
+
+
+<div class="card mx-auto" style="width: 76rem;">
+    <!-- <img src="..." class="card-img-top" alt="..."> -->
+    <div class="card-body">
+        <h5 class="card-title mb-3">Notifications</h5>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Time</th>
+                    <th scope="col">Message</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if has_notifications == False %}
+                <tr>
+                    <td colspan="2" class="text-center">{{message}}</td>
+                </tr>
+                {% else %}
+                {% for notification in notifications %}
+                <tr>
+                    <td>{{notification.created_at|naturaltime}}</td>
+                    <td>{{notification.message}}
+                        {% comment %} add a delete cross button to url delete_notification with notification id {% endcomment %}
+                        <a href="{% url 'delete_notification' notification.id %}" class="btn btn-danger btn-sm" style="float: right; padding: 0.2rem 0.5rem; font-size: 0.8rem;">
+                            &times;
+                        </a>
+
+                    </td>
+
+
+                </tr>
+                {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+
+{% endblock content %}

@@ -36,16 +36,24 @@
 
 
                     <td>
-                        {% if job.status == 'Applied' %}
-                        <span class="badge bg-warning">Pending</span>
-                        {% elif job.status == 'A' %}
-                        <span class="badge bg-success">Accepted</span>
-                        {% elif job.status == 'R' %}
+                        {% if job.status.id == 1 %}
+                        <span class="badge bg-warning">Applied</span>
+                        {% elif job.status == 2 %}
+                        {% comment %} shortlisted {% endcomment %}
+                        <span class="badge bg-success">Shortlisted</span>
+                        {% elif job.status == 3 %}
+                        {% comment %} Rejected {% endcomment %}
                         <span class="badge bg-danger">Rejected</span>
+                        {% elif job.status == 4 %}
+                        {% comment %} Hired {% endcomment %}
+                        <span class="badge bg-success">Hired</span>
                         {% endif %}
+                        {% comment %} update application status {% endcomment %}
+                        
+                    
                     </td>
 
-                    {% comment %} <td><a href="{% url '' job.pk %}"><span class="badge bg-danger">Withdraw</span></a></td> {% endcomment %}
+                    <td><a href="{% url 'withdraw_application' job.pk %}"><span class="badge bg-danger">Withdraw</span></a></td>
                 </tr>
                 {% endfor %}
             </tbody>

@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'locations',
     'industries',
     'homepage',
+    'notifications',
     'django_filters',
 
 

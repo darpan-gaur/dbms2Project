@@ -4,65 +4,95 @@
 
 {% block content %}
  <section>
-    <div class="p-5 mb-4 bg-light rounded-3">
-        <div class="container-fluid py-5">
-            <h2 class="display-5 fw-bold">Django Jobs. Get Hired Quickly!</h2> <br>
+<div class="p-5 mb-4 bg-light rounded-3">
+    <div class="container-fluid py-5">
+        <h2 class="display-5 fw-bold">Django Jobs. Get Hired Quickly!</h2> <br>
 
-            <div class="card">
-                <div class="card-body">
-                    <form class="row gy-2 gx-3 align-items-center" method="GET">
-                        <div class="col-sm-3">
-                            <label for="autoSizingSelect">Company</label>
-                            {% render_field filter.form.company_name class="form-select" %}
-                        </div>
-                        <div class="col-sm-3">
-                            <label for="autoSizingSelect">Role</label>
-                            {% render_field filter.form.role class="form-select" %}
-                        </div>
-                        <div class="col-sm-3">
-                            <label for="autoSizingSelect">location</label>
-                            {% render_field filter.form.location class="form-select" %}
-                        </div>
-                        
-                        {% comment %} <div class="col-sm-3">
-                            <label for="autoSizingSelect">Choose Job Type</label>
-                            {% render_field filter.form. class="form-select" %}
-                        </div>
-                        <div class="col-sm-3">
-                            <label for="autoSizingSelect">Select Industry</label>
-                            {% render_field filter.form.industry class="form-select" %}
-                        </div> {% endcomment %}
+        <div class="card">
+            <div class="card-body">
+                <form class="row gy-2 gx-3 align-items-center" method="GET">
+                    
+                    <!-- Role (Text Input) -->
+                    <div class="col-auto">
+                        <input type="text" name="title" class="form-control" 
+                               placeholder="Job Role" value="{{ request.GET.title }}">
+                    </div>
 
-                        <div class="col-auto">
-                            <button type="submit" class="btn btn-primary">Search</button>
-                        </div>
-                    </form>
-                </div>
+                    <!-- Company Name (Text Input) -->
+                    <div class="col-auto">
+                        <input type="text" name="company_name" class="form-control" 
+                               placeholder="Company Name" value="{{ request.GET.company_name }}">
+                    </div>
+
+                    <!-- Location (Dropdown) -->
+                    <div class="col-auto">
+                        <select name="location" class="form-select">
+                            <option value="">Select Location</option>
+                            {% for location in locations %}
+                                <option value="{{ location.id }}" {% if request.GET.location == value|stringformat:"s" %}selected{% endif %}>
+                                    {{ location.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Industry (Dropdown) -->
+                    <div class="col-auto">
+                        <select name="industry" class="form-select">
+                            <option value="">Select Industry</option>
+                            {% for industry in industries %}
+                                <option value="{{ industry.id }}" {% if request.GET.industry == value|stringformat:"s" %}selected{% endif %}>
+                                    {{ industry.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Job Type (Dropdown) -->
+                    <div class="col-auto">
+                        <select name="job_type" class="form-select">
+                            <option value="">Select Job Type</option>
+                            {% for job_type in job_types %}
+                                <option value="{{ job_type.id }}" {% if request.GET.job_type == value|stringformat:"s" %}selected{% endif %}>
+                                    {{ job_type.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Search Button -->
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                </form>
             </div>
-            <p class="col-md-8 fs-6 mt-3">
-                Welcome to Django Job Portal! Search and get your dream job. We have thousands of job
-                offerings for you. Don't forget to leave a like when you get a job. Goodluck with your job
-                hunt!
-            </p>
-            <a href="{% url 'view_all_job_listings' %}" class="btn btn-outline-primary" type="button">More Jobs</a>
         </div>
+
+        <p class="col-md-8 fs-6 mt-3">
+            Welcome to Django Job Portal! Search and get your dream job. We have thousands of job
+            offerings for you. Don't forget to leave a like when you get a job. Good luck with your job hunt!
+        </p>
+        <a href="{% url 'home' %}" class="btn btn-outline-primary" type="button">More Jobs</a>
     </div>
+</div>
 </section>
 
  <div class="row row-cols-1 row-cols-md-3 g-4">
-     {% for job in filter.qs %}
+     {% for job in job_filters %}
     <div class="col">
         <div class="card h-100">
             <div class="card-body">
                 <h5 class="card-title">{{job.role}}</h5>
-                {% comment %} <p class="card-text">Industry: {{job.industry}}</p> {% endcomment %}
-                <p class="card-text">Job Type: {{job.company.name}}</p>
-                <p class="card-text">Location: {{job.location}}</p>
+                <p class="card-text">Industry: {{job.industry.name}}</p>
+                <p class="card-text">Company: {{job.company.company_name}}</p>
+                <p class="card-text">Job Type: {{job.job_type.name}}</p>
+                <p class="card-text">Location: {{job.location.name}}</p>
                 <p class="card-text">Salary: {{job.salary}}</p>
             </div>
             <div class="card-footer">
-                <small class="text-muted">{{job.timestamp|naturaltime}}</small>
+                <a href="{% url 'job_details' job.pk %}" class="btn btn-primary">View Job</a>
             </div>
+            
         </div>
     </div>
     {% endfor %}

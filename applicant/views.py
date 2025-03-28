@@ -27,13 +27,23 @@ def update_applicant_view(request):
 
         if request.method == 'POST':
             form = ApplicantProfileForm(request.POST)
+
+            # get skills from the form
+            skills = request.POST.get('skills')
+            print("skills", skills)
+
             if form.is_valid():
                 if not applicant.exists():  # Check if applicant exists
                     applicant_instance = form.save(commit=False)
                     applicant_instance.user = request.user
+                    print("skills", form.cleaned_data['skills'])
                     applicant_instance.save()
+                
                     form.save_m2m()  # Save many-to-many field (skills)
                     resume_ins = upload_resume(request)
+                    if resume_ins is None:
+                        print(form.errors)
+                        return render(request, 'applicant/update_applicant.html', {'form': form, 'skills': Skills.objects.all()})
                     applicant_instance.resume = resume_ins
                     applicant_instance.save()
 
@@ -46,12 +56,16 @@ def update_applicant_view(request):
                     applicant_instance.skills.clear()
 
                     # Add new skills
-                    # skills = form.cleaned_data['skills']
-                    # for skill in skills:
-                    #     applicant_instance.skills.add(skill)
+                    print("skills", form.cleaned_data['skills'])
                     applicant_instance.skills.set(form.cleaned_data['skills'])
                     resume_ins = upload_resume(request)
+                    if resume_ins is None:
+                        print(form.errors)
+                        return render(request, 'applicant/update_applicant.html', {'form': form, 'skills': Skills.objects.all()})
+
+
                     applicant_instance.resume = resume_ins
+
                     applicant_instance.save()  # Save the updated object
                     print("THis isss: ", applicant_instance.resume.resume.url)
 
@@ -93,11 +107,11 @@ def upload_resume(request):
                 return resume_instance
             else:
                 messages.warning(request, "Please enter valid data")
-        
+                return None
         else:
-            form = ResumeForm()
+            messages.warning(request, "Please upload a resume")
+            return None
 
-        return render(request, "applicant/upload_resume.html", {"form": form})
 
     else:
         messages.warning(request, 'Please Login/Signup first')
