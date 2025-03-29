@@ -12,3 +12,4 @@ media/*
 *.log
 *.fdb_latexmk
 *.synctex.gz
+user.data

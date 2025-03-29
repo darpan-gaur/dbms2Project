@@ -38,6 +38,9 @@ def home_view(request):
         raw_query += " AND role ILIKE %s"
         params.append(f"%{query_params['title']}%")
 
+    # order by reverse order of created_at
+    raw_query += " ORDER BY created_at DESC"
+
     raw_query += ';'
     print("Generated SQL:", raw_query)  # Debugging
 

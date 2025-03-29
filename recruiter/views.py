@@ -52,3 +52,4 @@ def update_recruiter_profile(request):
     else:
         messages.warning(request, 'You need to login first')
         return redirect('login')
+

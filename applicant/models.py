@@ -15,7 +15,6 @@ class Applicant(models.Model):
     location = models.CharField(max_length=100)
     skills = models.ManyToManyField(Skills, null=True, blank=True)
     phone_number = models.CharField(max_length=15)
-    # @TODO: onetomany relationship with resume model
     resume = models.ForeignKey(Resume, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):

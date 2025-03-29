@@ -14,6 +14,7 @@
                     <th scope="col">Location</th>
                     <th scope="col">Salary </th>
                     <th scope="col">No. of Applicants</th>
+                    <th scope="col">Industry</th>
                     <th scope="col">Status</th>
                     <th scope="col">Update</th>
                     <th scope="col">Delete</th>
@@ -26,6 +27,8 @@
                     <td>{{job.location}}</td>
                     <td>{{job.salary}}</td>
                     <td>{{job.jobapplication_set.all.count }} <a href="{% url 'applications_for_job' job.pk %}"><small>View all</small></a></td> <!-- No. of Applicants Calc-->
+                    <td>{{job.industry}}</td>
+                    
 
                     {% if job.is_active %}
                     <td><span class="badge bg-success">Active</span></td>
@@ -39,7 +42,7 @@
                 {% endfor %}
             </tbody>
         </table>
-        
+        <a href="{% url 'add_job' %}" class="btn btn-primary">Post New Job</a>
     </div>
 </div>
 
